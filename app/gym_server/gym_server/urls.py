@@ -15,9 +15,16 @@ Including another URLconf
 '''
 from django.conf.urls import include, url
 from django.contrib import admin
+from environments.views import EnvironmentViewSet
+from rest_framework import routers
+
+# register environment router
+environment_router = routers.SimpleRouter()
+environment_router.register('', EnvironmentViewSet, base_name='environment')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^auth/', include('authentication.urls')),
+    url(r'^environments/', include(environment_router.urls)),
 ]
