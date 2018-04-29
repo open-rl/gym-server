@@ -8,7 +8,4 @@ class Environment(models.Model):
     '''
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
-
-    # may be obsolete
-    high_score = models.FloatField()
     video_url = models.URLField()
