@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
     'rest_auth',
+    'rest_auth.registration',
     'rest_framework',
     'rest_framework.authtoken',
 )
