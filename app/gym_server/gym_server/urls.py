@@ -14,17 +14,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 '''
 from django.conf.urls import include, url
+from django.urls import re_path
 from django.contrib import admin
 from environments.views import EnvironmentViewSet
 from rest_framework import routers
+from scoreboards.views import EvaluationRunViewSet, ScoreBoardView
+
 
 # register environment router
 environment_router = routers.SimpleRouter()
 environment_router.register('', EnvironmentViewSet, base_name='environment')
 
+# register evaluation router
+eval_router = routers.SimpleRouter()
+eval_router.register('', EvaluationRunViewSet, base_name='evaluation')
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^accounts/', include('allauth.urls')),
     url(r'^auth/', include('authentication.urls')),
     url(r'^environments/', include(environment_router.urls)),
+    url(r'^evaluations/', include(eval_router.urls)),
+    re_path(r'scoreboard/(?P<env>[\w-]+)/', ScoreBoardView.as_view()),
 ]
