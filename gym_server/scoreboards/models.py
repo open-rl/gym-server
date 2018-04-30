@@ -1,10 +1,10 @@
 from django.db import models
 from environments.models import Environment
-from allauth.socialaccount.models import SocialAccount
+from django.contrib.auth.models import User
 
 
 class EvaluationRun(models.Model):
-    user = models.ForeignKey(SocialAccount,
+    user = models.ForeignKey(User,
                              on_delete=models.CASCADE)
     env = models.ForeignKey(Environment, related_name='eval_runs',
                             on_delete=models.CASCADE)
