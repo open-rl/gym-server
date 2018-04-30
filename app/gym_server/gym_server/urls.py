@@ -20,6 +20,7 @@ from environments.views import EnvironmentViewSet
 from rest_framework import routers
 from scoreboards.views import EvaluationRunViewSet, ScoreBoardView
 
+
 # register environment router
 environment_router = routers.SimpleRouter()
 environment_router.register('', EnvironmentViewSet, base_name='environment')
