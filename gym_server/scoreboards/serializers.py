@@ -13,12 +13,13 @@ class EvaluationRunSerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class ScoreBoardSerializer(serializers.ModelSerializer):
+class S3UploadURLSerializer(serializers.Serializer):
     '''
-    This class implements the `ModelSerializer` for the gym-server scoreboard.
-    Basically, it is a `EvaluationRunSerializer` with modified fields, as we don't
-    need to send along the `env` field with every request.
+    The `S3UploadURLSerializer` provides de/serializing functionality for the
+    pre-signed upload URL we provide to each client.
     '''
+    url = serializers.URLField(max_length=255, read_only=True)
+
     class Meta:
         model = EvaluationRun
         fields = ('pk', 'user', 's3_path', 'high_score')
