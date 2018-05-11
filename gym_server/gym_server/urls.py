@@ -18,7 +18,7 @@ from django.urls import re_path
 from django.contrib import admin
 from environments.views import EnvironmentViewSet
 from rest_framework import routers
-from scoreboards.views import EvaluationRunViewSet
+from scoreboards.views import EvaluationRunViewSet, S3UploadURLView
 
 
 # register environment router
@@ -34,4 +34,5 @@ urlpatterns = [
     url(r'^auth/', include('authentication.urls')),
     url(r'^environments/', include(environment_router.urls)),
     url(r'^evaluations/', include(eval_router.urls)),
+    url(r'^url-sign-request/', S3UploadURLView.as_view()),
 ]
