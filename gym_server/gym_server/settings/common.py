@@ -131,3 +131,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SITE_ID = 3
+
+
+# upload specific stuff
+S3_EVALUATION_BUCKET = os.environ.get('S3_EVALUATION_BUCKET', 'evaluations')
