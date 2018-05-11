@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from allauth.socialaccount.models import SocialAccount, SocialToken
+from boto.s3.connection import S3Connection
 from datetime import datetime
+from django.conf import settings
 from environments.models import Environment
+import logging
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from scoreboards.models import EvaluationRun
-from scoreboards.serializers import EvaluationRunSerializer, ScoreBoardSerializer
+from scoreboards.serializers import (EvaluationRunSerializer,
+                                     S3UploadURLSerializer)
+
+
+logger = logging.getLogger(__name__)
 
 
 class EvaluationRunViewSet(viewsets.ReadOnlyModelViewSet):
@@ -30,8 +37,12 @@ class S3UploadURLView(APIView):
     this functionality out of the box. More, we do not need to pass in any
     credentials as we enable this functionality on an EC2 role basis.
     '''
+    s3_connection = S3Connection()
+
     def get(self, request):
+        logging.debug('Received upload request')
         if request.GET.get('token', None) is None:
+            logging.debug('No token provided')
             return Response({'error': 'auth token missing'},
                             status=status.HTTP_401_UNAUTHORIZED)
 
@@ -39,13 +50,25 @@ class S3UploadURLView(APIView):
 
         # get social account
         try:
+            logging.debug('Fetching Social Account')
             account = SocialAccount.objects.get(socialtoken__token=auth_token)
         except SocialAccount.DoesNotExist:
+            logging.debug('No matching social account found')
             return Response({'error': 'no associated account found'},
                             status=status.HTTP_400_BAD_REQUEST)
 
         # build upload url: {social account uid}/eval_{datetime string}
         datetime_str = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S')
-        upload_path = '{}/eval_{}'.format(account.uid, datetime_str)
+        key = '{}/eval_{}'.format(account.uid, datetime_str)
 
         # handle URL signing via boto3
+        try:
+            url = self.s3_connection\
+                .generate_url(3600, 'PUT', key=key, bucket=settings.S3_EVALUATION_BUCKET)
+        except Exception as e:
+            print('Something happened here: {}'.format(str(e)))
+            return Response({'meeehe': 'meeeeh'}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # return serialized response
+        serializer = S3UploadURLSerializer({'url': url})
+        return Response(serializer.data)
