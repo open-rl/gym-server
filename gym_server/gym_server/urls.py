@@ -18,7 +18,7 @@ from django.urls import re_path
 from django.contrib import admin
 from environments.views import EnvironmentViewSet
 from rest_framework import routers
-from scoreboards.views import EvaluationRunViewSet, ScoreBoardView
+from scoreboards.views import EvaluationRunViewSet
 
 
 # register environment router
@@ -34,5 +34,4 @@ urlpatterns = [
     url(r'^auth/', include('authentication.urls')),
     url(r'^environments/', include(environment_router.urls)),
     url(r'^evaluations/', include(eval_router.urls)),
-    re_path(r'scoreboard/(?P<env>[\w-]+)/', ScoreBoardView.as_view()),
 ]
