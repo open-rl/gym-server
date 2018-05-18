@@ -61,13 +61,9 @@ class S3UploadURLView(APIView):
         datetime_str = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S')
         key = '{}/eval_{}'.format(account.uid, datetime_str)
 
-        # handle URL signing via boto3
-        try:
-            url = self.s3_connection\
-                .generate_url(3600, 'PUT', key=key, bucket=settings.S3_EVALUATION_BUCKET)
-        except Exception as e:
-            print('Something happened here: {}'.format(str(e)))
-            return Response({'meeehe': 'meeeeh'}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        # sign URL via boto
+        url = self.s3_connection\
+            .generate_url(3600, 'PUT', key=key, bucket=settings.S3_EVALUATION_BUCKET)
 
         # return serialized response
         serializer = S3UploadURLSerializer({'url': url})
