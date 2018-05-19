@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from allauth.socialaccount.models import SocialAccount, SocialToken
+from allauth.socialaccount.models import SocialAccount
 from boto.s3.connection import S3Connection
 from datetime import datetime
 from django.conf import settings
@@ -33,7 +33,7 @@ class S3UploadURLView(APIView):
     convention, our upload path inside the bucket is composed of the datetime string
     prefixed by the client uid.
 
-    The actual signing is facilitated by the boto3 library, which provides
+    The actual signing is facilitated by the boto library, which provides
     this functionality out of the box. More, we do not need to pass in any
     credentials as we enable this functionality on an EC2 role basis.
     '''
@@ -51,7 +51,7 @@ class S3UploadURLView(APIView):
         # get social account
         try:
             logging.debug('Fetching Social Account')
-            account = SocialAccount.objects.get(socialtoken__token=auth_token)
+            account = SocialAccount.objects.get(user__openrl_token__token=auth_token)
         except SocialAccount.DoesNotExist:
             logging.debug('No matching social account found')
             return Response({'error': 'no associated account found'},
