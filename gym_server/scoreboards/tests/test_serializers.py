@@ -1,1 +1,1 @@
-from scoreboards.serializers import EvaluationRunSerializer, ScoreBoardSerializer
+from scoreboards.serializers import EvaluationRunSerializer
