@@ -1,4 +1,5 @@
-from allauth.socialaccount.models import SocialToken
+from allauth.socialaccount.models import SocialAccount
+from authentication.models import AuthToken
 from mixer.backend.django import mixer
 from rest_framework import status
 from rest_framework.test import force_authenticate, APITestCase
@@ -24,7 +25,9 @@ class S3UploadURLViewTest(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_url_signed_correctly_if_user_exists(self):
-        token = mixer.blend(SocialToken)
+        account = mixer.blend(SocialAccount)
+        token = mixer.blend(AuthToken, account=account.user)
+
         resp = self.client.get('/url-sign-request/?token={}'.format(token.token))
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertIsNotNone(resp.data.get('url', None))
