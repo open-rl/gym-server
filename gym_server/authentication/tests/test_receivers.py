@@ -17,7 +17,7 @@ class GenerateAuthTokenTest(TestCase):
         user = mixer.blend(User)
 
         social_login = MagicMock()
-        social_login.user.user = user
+        social_login.user = user
 
         generate_auth_token(MagicMock(), social_login)
 
