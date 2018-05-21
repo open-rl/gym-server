@@ -84,7 +84,6 @@ WSGI_APPLICATION = 'gym_server.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -95,7 +94,6 @@ DATABASES = {
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -107,10 +105,13 @@ USE_L10N = True
 USE_TZ = True
 
 
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
+
 
 # pagination
 REST_FRAMEWORK = {
@@ -119,7 +120,7 @@ REST_FRAMEWORK = {
 }
 
 
-# social login
+# social login related settings
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
         'SCOPE': [
@@ -129,6 +130,15 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
     }
 }
+
+AUTH_CALLBACK_URL = os.environ.get('AUTH_CALLBACK_URL', 'http://localhost:8000')
+
+
+# rest auth serializer config
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'authentication.serializers.OpenRLAccountSerializer',
+}
+
 
 SITE_ID = 3
 
