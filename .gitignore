@@ -100,3 +100,8 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# some custom stuff
+.history
+*.swp
+*~
